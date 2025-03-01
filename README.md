@@ -9,7 +9,7 @@ https://docs.google.com/spreadsheets/d/1kzr6CEEmP_vkNcro5OUIGtxegZZa5paBC7xA2nY6
 
 Must required:
 
-1.Attribute used- any 12 out of 26 (age,gender,view are must)(smaple check kr lena)
+1.Attribute used- any 12 out of 26 (age,gender,view are must)(sample check kr lena)
 
 2.koi bhi data augmentation  use kr lo
 
