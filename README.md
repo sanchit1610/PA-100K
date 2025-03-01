@@ -23,4 +23,4 @@ Must required:
 
 mai code daal dunga same use krlena bss model change kr dena
 
-make sure result 50-70 ke beech mai hi aya
+
