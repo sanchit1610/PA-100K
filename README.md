@@ -21,6 +21,6 @@ Must required:
 
 6.minimum 3 model toh lga lena
 
-mai code daal dunga same use krlena bss model change kr dena
+mai code daal dunga same use krlena bss model change kr dena, optimizer change kr do bkl
 
 reference ke liye maine mobilenet vala attach kiya hai pr attribute kaam kr lena
