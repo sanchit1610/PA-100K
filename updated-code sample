@@ -1,0 +1,107 @@
+#new update one attribute ismai 12 hai 
+
+code 
+
+import tensorflow as tf
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications import MobileNet
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.metrics import Precision, Recall, F1Score
+import numpy as np
+import pandas as pd
+
+# Load the PA-100K dataset
+# Assuming you have the dataset in a directory called 'pa-100k'
+# and the labels in a CSV file called 'labels.csv'
+
+data_dir = 'pa-100k'
+labels_df = pd.read_csv('labels.csv')
+
+# Select the 12 main attributes
+main_attributes = ['Female', 'AgeOver60', 'Age18-60', 'Front', 'Side', 'Back', 'Hat', 'Glasses', 'HandBag', 'Backpack', 'ShortSleeve', 'Trousers']
+labels_df = labels_df[main_attributes]
+
+# Define the image size
+img_size = (224, 224)
+batch_size = 32
+
+# Data augmentation
+datagen = ImageDataGenerator(
+    rescale=1./255,
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest',
+    validation_split=0.2  # Split 20% of the data for validation
+)
+
+# Load the images and labels
+train_generator = datagen.flow_from_dataframe(
+    dataframe=labels_df,
+    directory=data_dir,
+    x_col='image_path',  # Assuming the CSV has a column 'image_path' with the image file paths
+    y_col=main_attributes,
+    target_size=img_size,
+    batch_size=batch_size,
+    class_mode='raw',
+    subset='training'
+)
+
+validation_generator = datagen.flow_from_dataframe(
+    dataframe=labels_df,
+    directory=data_dir,
+    x_col='image_path',
+    y_col=main_attributes,
+    target_size=img_size,
+    batch_size=batch_size,
+    class_mode='raw',
+    subset='validation'
+)
+
+# Load the MobileNet model
+base_model = MobileNet(weights='imagenet', include_top=False, input_shape=(img_size[0], img_size[1], 3))
+
+# Add custom layers on top of the base model
+x = base_model.output
+x = GlobalAveragePooling2D()(x)
+x = Dense(1024, activation='relu')(x)
+predictions = Dense(len(main_attributes), activation='sigmoid')(x)
+
+# Define the final model
+model = Model(inputs=base_model.input, outputs=predictions)
+
+# Freeze the base model layers
+for layer in base_model.layers:
+    layer.trainable = False
+
+# Compile the model with additional metrics
+model.compile(optimizer=Adam(lr=0.001),
+              loss='binary_crossentropy',
+              metrics=['accuracy', Precision(), Recall(), F1Score()])
+
+# Train the model for 10 epochs
+model.fit(train_generator,
+          epochs=10,
+          validation_data=validation_generator)
+
+# Unfreeze the base model layers for fine-tuning
+for layer in base_model.layers:
+    layer.trainable = True
+
+# Recompile the model with a lower learning rate
+model.compile(optimizer=Adam(lr=0.0001),
+              loss='binary_crossentropy',
+              metrics=['accuracy', Precision(), Recall(), F1Score()])
+
+# Fine-tune the model for a few more epochs
+model.fit(train_generator,
+          epochs=10,
+          validation_data=validation_generator)
+
+# Save the model
+model.save('pa-100k_model.h5')
