@@ -23,4 +23,4 @@ Must required:
 
 mai code daal dunga same use krlena bss model change kr dena
 
-
+reference ke liye maine mobilenet vala attach kiya hai pr attribute kaam kr lena
