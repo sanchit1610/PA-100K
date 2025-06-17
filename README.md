@@ -6,21 +6,3 @@ link-https://www.kaggle.com/datasets/yuulind/pa-100k
 
 result metric sheet
 https://docs.google.com/spreadsheets/d/1kzr6CEEmP_vkNcro5OUIGtxegZZa5paBC7xA2nY6JLc/edit?usp=sharing
-
-Must required:
-
-1.Attribute used- any 12 out of 26 (age,gender,view are must)(sample check kr lena)
-
-2.koi bhi data augmentation  use kr lo
-
-3.minimum-10 epochs(10 se jyada bhi kr skte ho)
-
-4.base vgera freeze kr lena easy ho jaega
-
-5.result metrics sheet mai update kr dena
-
-6.minimum 3 model toh lga lena
-
-mai code daal dunga same use krlena bss model change kr dena, optimizer change kr do bkl
-
-reference ke liye maine mobilenet vala attach kiya hai pr attribute kaam kr lena
